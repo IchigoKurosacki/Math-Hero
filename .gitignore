@@ -1,0 +1,24 @@
+# Dependencies & Build Outputs
+node_modules/
+dist/
+.claude/
+backups/
+
+# Android / Local Build Environments
+math-hero/.android_sdk/
+math-hero/.gradle/
+math-hero/.gradle_home/
+math-hero/.jdk/
+math-hero/.kotlin/
+math-hero/build/
+math-hero/app/build/
+math-hero/gradle-8.9/
+math-hero/gradle-9.3.1/
+math-hero/downscaled_assets/
+math-hero/logcat_full.txt
+math-hero/*.zip
+
+# Environment & Logs
+*.log
+.DS_Store
+Thumbs.db

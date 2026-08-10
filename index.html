@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="Math Hero: Side-Scroller RPG — browser game for learning the multiplication table, in Ukrainian and English. 40 stages, 8 regions, bosses and an endless mode." />
+  <meta name="theme-color" content="#111b35" />
+  <title data-i18n-title="app.title">Math Hero: Легенди множення</title>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="gameCanvas" data-i18n-attr="aria-label:app.world" aria-label="Ігровий світ Math Hero"></canvas>
+
+    <div id="uiOverlay">
+      <div class="screen-vignette" aria-hidden="true"></div>
+
+      <header id="topBar" class="game-panel hud-panel interactive" data-i18n-attr="aria-label:app.hud" aria-label="Ігровий інтерфейс">
+
+        <div class="hud-group hero-hud">
+          <div class="hero-portrait-wrap">
+            <div class="hero-portrait-frame" aria-hidden="true">
+              <img id="heroPortraitImg" src="./assets/heroes/hero_knight.png" alt="" />
+            </div>
+            <span class="portrait-level-dot">★</span>
+          </div>
+          <div class="level-stack">
+            <div id="levelBadge" class="level-badge">Рівень 1</div>
+            <div class="xp-track" data-i18n-attr="aria-label:hud.xpAria" aria-label="Досвід героя"><div id="xpFill" class="xp-fill"></div></div>
+            <div id="xpText" class="xp-text">0/100 XP</div>
+          </div>
+          <div id="heartsContainer" class="hearts-container" aria-label="Здоров’я героя">
+            <span class="heart-icon">♥</span><span class="heart-icon">♥</span><span class="heart-icon">♥</span><span class="heart-icon">♥</span><span class="heart-icon">♥</span>
+          </div>
+        </div>
+
+        <div class="center-hud">
+          <span class="title-ornament" aria-hidden="true">◆</span>
+          <div class="center-hud-copy">
+            <div id="regionTitle">Math Hero RPG</div>
+            <div id="stageProgressBadge" data-i18n="hud.ready">Готовий до пригод</div>
+            <div class="stage-progress-track" data-i18n-attr="aria-label:hud.levelProgress" aria-label="Прогрес рівня">
+              <div id="stageProgressFill" class="stage-progress-fill"></div>
+            </div>
+          </div>
+          <span class="title-ornament" aria-hidden="true">◆</span>
+        </div>
+
+        <div class="hud-group hud-actions">
+          <div id="coinsBadge" class="coins-badge"><span class="coin-symbol">🪙</span> 50</div>
+          <button id="btnPause" class="btn btn-icon btn-pause" data-i18n-attr="aria-label:hud.pause" aria-label="Пауза">
+            <svg width="14" height="16" viewBox="0 0 14 16" fill="currentColor" aria-hidden="true">
+              <rect x="0" y="0" width="4" height="16" rx="1" />
+              <rect x="10" y="0" width="4" height="16" rx="1" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div id="centerSpeechOverlay" class="center-speech-overlay" aria-live="polite"></div>
+
+      <section id="mathCombatZone" class="game-panel combat-panel interactive" data-i18n-attr="aria-label:app.combatRegion" aria-label="Математичний бій"></section>
+
+      <div id="modalContainer" class="modal-overlay"></div>
+    </div>
+  </div>
+
+  <!--
+    Ворота орієнтації: на телефоні в портреті поле бою не вміщається — герой,
+    ворог і панель відповідей стоять в один ряд. Показуються лише на дотикових
+    екранах, щоб вузьке вікно на ПК гру не блокувало.
+  -->
+  <div id="orientationGate" class="orientation-gate" aria-live="polite">
+    <div class="orientation-card">
+      <span class="orientation-icon" aria-hidden="true">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="20" y="6" width="24" height="40" rx="4" />
+          <path d="M32 40h.02" />
+          <path d="M10 52c4 5 11 6 17 4" />
+          <path d="M27 58l-3-3 3-3" />
+        </svg>
+      </span>
+      <h2 data-i18n="orientation.title">Поверни пристрій</h2>
+      <p data-i18n="orientation.text">Math Hero грається в горизонтальному положенні — так поле бою вміщається повністю.</p>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

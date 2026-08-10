@@ -1,0 +1,20 @@
+{
+  "name": "math-hero-rpg",
+  "private": true,
+  "version": "2.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs --open",
+    "serve": "node scripts/serve.mjs",
+    "generate:assets": "node scripts/generateAssets.mjs",
+    "generate:thumbs": "node --max-old-space-size=2048 scripts/generateThumbnails.mjs",
+    "validate:assets": "node scripts/validateAssets.mjs",
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/staticBuild.mjs",
+    "verify": "npm run validate:assets && npm run check && npm test && npm run build",
+    "check": "node scripts/checkSyntax.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
