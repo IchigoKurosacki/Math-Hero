@@ -222,6 +222,8 @@ export const UI = {
   'settings.bgm': { uk: 'Фонова музика', en: 'Background music' },
   'settings.bgmHint': { uk: 'Теми регіонів і босів', en: 'Region and boss themes' },
   'settings.bgmVolume': { uk: 'Гучність музики', en: 'Music volume' },
+  'settings.vibration': { uk: 'Вібрація', en: 'Vibration' },
+  'settings.vibrationHint': { uk: 'Тактильна вібрація при ударах', en: 'Haptic vibration on hits' },
   'settings.groupLearning': { uk: 'Навчання', en: 'Learning' },
   'settings.tables1112': { uk: 'Таблиці 11 та 12', en: 'Tables 11 and 12' },
   'settings.tables1112Hint': { uk: 'Додати складніші множники', en: 'Add the harder multipliers' },

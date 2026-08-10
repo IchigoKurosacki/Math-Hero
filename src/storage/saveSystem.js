@@ -133,6 +133,7 @@ function createDefaultSave() {
       particleDensity: 1,
       screenShake: 1,
       animationSpeed: 1,
+      vibrationMuted: false,
     },
   };
 }

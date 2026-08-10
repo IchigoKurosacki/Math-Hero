@@ -301,8 +301,16 @@ export class SoundEngine {
   // =========================================================================
   isSfxMuted() { return this.saveSystem?.data?.settings?.sfxMuted; }
   isBgmMuted() { return this.saveSystem?.data?.settings?.bgmMuted; }
+  isVibrationMuted() { return !!this.saveSystem?.data?.settings?.vibrationMuted; }
   getSfxVol() { return this.isSfxMuted() ? 0 : (this.saveSystem?.data?.settings?.sfxVolume ?? 1.0); }
   getBgmVol() { return this.isBgmMuted() ? 0 : (this.saveSystem?.data?.settings?.bgmVolume ?? 1.0); }
+
+  vibrate(pattern) {
+    if (this.isVibrationMuted()) return;
+    if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+      try { navigator.vibrate(pattern); } catch (_e) {}
+    }
+  }
 
   // =========================================================================
   // LOW-LEVEL SYNTH HELPERS (all route into a given bus)
@@ -473,6 +481,7 @@ export class SoundEngine {
   }
 
   playClick() {
+    this.vibrate(10);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -522,6 +531,16 @@ export class SoundEngine {
    * Layered hero attacks. type: 'sword' | 'magic' | 'arrow' | 'heavy' | 'fire' | 'ice' | 'lightning'
    */
   playHeroAttack(type = 'sword') {
+    switch (type) {
+      case 'magic': this.vibrate([20, 15, 30]); break;
+      case 'arrow': this.vibrate(20); break;
+      case 'heavy': this.vibrate([35, 15, 40]); break;
+      case 'fire': this.vibrate([25, 20, 30]); break;
+      case 'ice': this.vibrate(25); break;
+      case 'lightning': this.vibrate([15, 10, 35]); break;
+      case 'sword': default: this.vibrate(25); break;
+    }
+
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -579,6 +598,7 @@ export class SoundEngine {
   }
 
   playCrit() {
+    this.vibrate([40, 20, 60]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -591,6 +611,7 @@ export class SoundEngine {
   }
 
   playHurt() {
+    this.vibrate([45, 25, 45]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -601,6 +622,7 @@ export class SoundEngine {
   }
 
   playHeal() {
+    this.vibrate([15, 30, 20]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -611,6 +633,7 @@ export class SoundEngine {
   }
 
   playShield() {
+    this.vibrate(30);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -624,6 +647,7 @@ export class SoundEngine {
 
   /** Enemy attack. type: 'bite' | 'claw' | 'spit' | 'magic' */
   playEnemyAttack(type = 'claw') {
+    this.vibrate([35, 20, 45]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -650,6 +674,7 @@ export class SoundEngine {
   }
 
   playEnemyHurt() {
+    this.vibrate(20);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -658,6 +683,7 @@ export class SoundEngine {
   }
 
   playEnemyDeath() {
+    this.vibrate([30, 20, 50]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -667,6 +693,7 @@ export class SoundEngine {
   }
 
   playBossRoar() {
+    this.vibrate([50, 30, 50, 30, 70]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -678,6 +705,7 @@ export class SoundEngine {
   }
 
   playBossPhaseTransition() {
+    this.vibrate([60, 30, 80, 30, 100]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;
@@ -689,6 +717,7 @@ export class SoundEngine {
   }
 
   playExplosion() {
+    this.vibrate([70, 20, 90]);
     this.init();
     if (this.isSfxMuted()) return;
     const t = this.ctx.currentTime, v = this.getSfxVol(), bus = this.sfxBus;

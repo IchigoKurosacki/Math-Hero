@@ -993,6 +993,7 @@ export class MenuSystem {
             ${this._settingSlider('sliderSfx', t('settings.sfxVolume'), 0, 1, 0.1, settings.sfxVolume ?? 1)}
             ${this._settingToggle('btnToggleBgm', '🎵', t('settings.bgm'), t('settings.bgmHint'), !settings.bgmMuted)}
             ${this._settingSlider('sliderBgm', t('settings.bgmVolume'), 0, 1, 0.1, settings.bgmVolume ?? 1)}
+            ${this._settingToggle('btnToggleVibration', '📳', t('settings.vibration'), t('settings.vibrationHint'), !settings.vibrationMuted)}
           </section>
 
           <section class="setting-group">
@@ -1069,6 +1070,13 @@ export class MenuSystem {
       // `startBgm()` here would drop a boss fight back to the meadows theme.
       if (settings.bgmMuted) this.soundEngine.stopBgm();
       else if (!this.soundEngine.resumeCurrentBgm()) this.soundEngine.startMenuBgm();
+      this.saveSystem.save();
+      this.showSettings(isFromPause);
+    });
+
+    this._bind('btnToggleVibration', () => {
+      settings.vibrationMuted = !settings.vibrationMuted;
+      if (!settings.vibrationMuted) this.soundEngine.vibrate(30);
       this.saveSystem.save();
       this.showSettings(isFromPause);
     });
