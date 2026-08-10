@@ -1006,7 +1006,6 @@ export class MenuSystem {
             <h3 class="pick-heading">${t('settings.groupAccess')}</h3>
             ${this._settingToggle('btnToggleMotion', '🐢', t('settings.reducedMotion'), t('settings.reducedMotionHint'), settings.reducedMotion)}
             ${this._settingToggle('btnToggleContrast', '◐', t('settings.contrast'), t('settings.contrastHint'), settings.highContrast)}
-            ${this._settingSlider('sliderAnimation', t('settings.animationSpeed'), 0.5, 1.5, 0.1, settings.animationSpeed || 1)}
           </section>
 
           <section class="setting-group">
@@ -1093,7 +1092,6 @@ export class MenuSystem {
       this.showSettings(isFromPause);
     });
 
-    bindSlider('sliderAnimation', value => { settings.animationSpeed = value; });
     this._bind('btnToggleMotion', () => { settings.reducedMotion = !settings.reducedMotion; this.saveSystem.save(); document.body.classList.toggle('reduced-motion', settings.reducedMotion); this.showSettings(isFromPause); });
     this._bind('btnToggleContrast', () => { settings.highContrast = !settings.highContrast; this.saveSystem.save(); document.body.classList.toggle('high-contrast', settings.highContrast); this.showSettings(isFromPause); });
 
