@@ -48,9 +48,10 @@ export class MathUI {
           ).join('')}
         </div>`;
 
-    const maxHp = enemy?.maxHp || enemy?.hpMax || 1;
-    const currentHp = Math.max(0, Number(enemy?.currentHp ?? maxHp));
-    const hpPct = Math.max(0, Math.min(100, (currentHp / maxHp) * 100));
+    const maxHp = Math.max(1, Number(enemy?.maxHp || enemy?.hpMax || enemy?.hp || 1));
+    const currentHp = Math.max(0, Number(enemy?.currentHp ?? enemy?.hp ?? maxHp));
+    let hpPct = Math.max(0, Math.min(100, (currentHp / maxHp) * 100));
+    if (currentHp > 0 && hpPct < 4) hpPct = 4;
     const hpClass = hpPct > 50 ? 'healthy' : hpPct > 25 ? 'warning' : 'danger';
     const progressCurrent = Math.min(meta.defeated ?? 0, meta.targetEnemies ?? 0);
     const progressTarget = meta.targetEnemies || 0;
@@ -205,9 +206,10 @@ export class MathUI {
     const nameText = document.getElementById('enemyNameText');
     const hpText = document.getElementById('enemyHpText');
     const hpFill = document.getElementById('enemyHpFill');
-    const maxHp = enemy.maxHp || enemy.hpMax || 1;
-    const currentHp = Math.max(0, Number(enemy.currentHp ?? 0));
-    const hpPct = Math.max(0, Math.min(100, (currentHp / maxHp) * 100));
+    const maxHp = Math.max(1, Number(enemy.maxHp || enemy.hpMax || enemy.hp || 1));
+    const currentHp = Math.max(0, Number(enemy.currentHp ?? enemy.hp ?? maxHp));
+    let hpPct = Math.max(0, Math.min(100, (currentHp / maxHp) * 100));
+    if (currentHp > 0 && hpPct < 4) hpPct = 4;
     const hpClass = hpPct > 50 ? 'healthy' : hpPct > 25 ? 'warning' : 'danger';
 
     if (nameText) nameText.textContent = creatureName(enemy) || t('combat.enemyFallback');

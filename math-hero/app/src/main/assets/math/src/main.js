@@ -791,7 +791,10 @@ class GameApp {
     if (this.isBoss) {
       // Announcement, music and VFX for a new phase all belong to
       // `playEvolution`, driven by the controller's event.
-      phaseChanged = this.bossController.applyDamage(damage).phaseChanged;
+      const bossResult = this.bossController.applyDamage(damage);
+      phaseChanged = bossResult.phaseChanged;
+      this.currentEnemy.currentHp = bossResult.currentHp;
+      this.currentEnemy.maxHp = bossResult.maxHp;
     } else {
       this.currentEnemy.currentHp = Math.max(0, this.currentEnemy.currentHp - damage);
     }
@@ -836,6 +839,8 @@ class GameApp {
     if (this.isBoss) {
       const bossResult = this.bossController.applyDamage(ULTIMATE_DAMAGE);
       phaseChanged = bossResult.phaseChanged;
+      this.currentEnemy.currentHp = bossResult.currentHp;
+      this.currentEnemy.maxHp = bossResult.maxHp;
     } else {
       this.currentEnemy.currentHp = Math.max(0, this.currentEnemy.currentHp - ULTIMATE_DAMAGE);
     }
