@@ -511,7 +511,7 @@ button:disabled { opacity: .42; cursor: not-allowed; filter: grayscale(.72) brig
 .hero-speech::after { border-top-color: #ffd459; }
 .boss-speech { border-color: #c084fc; background: linear-gradient(180deg, rgba(58,25,84,.97), rgba(26,10,42,.98)); color: #f3e8ff; top: auto; bottom: calc(100% - var(--ground-y, 50vh) + calc(340px * var(--scene-scale, 1))); }
 .boss-speech::after { border-top-color: #c084fc; }
-.boss-speech.boss-speech-front { transform: translate3d(-105%, -40%, 0); }
+.boss-speech.boss-speech-front { transform: translate3d(-100%, -50%, 0); }
 .boss-speech.boss-speech-front::after {
   top: 50%; right: -10px; left: auto; bottom: auto;
   transform: translateY(-50%);

@@ -1093,4 +1093,17 @@ export class SpriteRenderer {
     const eliteYOffset = this._eliteYOffset(actor.id);
     return this.scale * scale * (hover + idleLift + box.height - eliteYOffset);
   }
+
+  /** Visual half-width of an actor in canvas pixels, used for precise speech bubble side anchoring. */
+  spriteHalfWidth(actor, { isBoss = false, phase = 1, heroHeight = 300, groundY = 0 } = {}) {
+    if (!actor) return 40;
+    if (isBoss) {
+      const form = this._bossForm(actor, phase, heroHeight, groundY);
+      return (this.scale * form.scale * form.box.width) * 0.5;
+    }
+    const scale = actor.size || 1;
+    const img = this.assetManager.getEnemySprite(actor.id);
+    const box = (img?.naturalHeight > 0) ? this._fit(img, 118) : { width: 66, height: 75 };
+    return (this.scale * scale * box.width) * 0.5;
+  }
 }

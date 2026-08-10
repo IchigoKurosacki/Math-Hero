@@ -693,25 +693,49 @@ class GameApp {
 
       enemyBubble.classList.toggle('boss-speech-front', isBossFront);
 
-      const xPct = Math.round((this.enemyX / this.renderer.width) * 1000) / 10;
       const enemyOffset = this.enemyTopOffset();
 
-      // Regular enemies: speech bubble is placed ABOVE creature sprite (+20px above top offset so ZERO overlap).
-      // Bosses on mobile/android: placed in front (to the left) of the boss.
-      const bottomPx = isBossFront
-        ? Math.round(enemyOffset * 0.45)
-        : Math.round(enemyOffset + 20);
+      if (isBossFront) {
+        // Boss on Android (placed to the left):
+        // Position tail tip exactly 1px to the left of the boss sprite's left edge
+        const groundY = this.renderer.height * 0.72;
+        const heroHeight = this.renderer.sprites.heroTopOffset(this.hero);
+        const bossHalfWidth = this.renderer.sprites.spriteHalfWidth(this.currentEnemy, {
+          isBoss: true,
+          phase: this.bossController?.phase || 1,
+          heroHeight,
+          groundY
+        });
 
-      if (this._lastEnemyX !== xPct || this._lastEnemyBottom !== bottomPx || this._lastEnemyFront !== isBossFront) {
-        this._lastEnemyX = xPct;
-        this._lastEnemyBottom = bottomPx;
-        this._lastEnemyFront = isBossFront;
-        enemyBubble.style.left = `${xPct}%`;
-        enemyBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
-        enemyBubble.style.top = '';
+        const leftPx = Math.round(this.enemyX - bossHalfWidth - 11);
+        const bottomPx = Math.round(enemyOffset * 0.5);
+
+        if (this._lastEnemyLeft !== leftPx || this._lastEnemyBottom !== bottomPx || this._lastEnemyFront !== isBossFront) {
+          this._lastEnemyLeft = leftPx;
+          this._lastEnemyBottom = bottomPx;
+          this._lastEnemyFront = isBossFront;
+          enemyBubble.style.left = `${leftPx}px`;
+          enemyBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
+          enemyBubble.style.top = '';
+        }
+      } else {
+        // Regular enemies (placed above):
+        // Position tail tip exactly 1px above top of creature sprite
+        const xPct = Math.round((this.enemyX / this.renderer.width) * 1000) / 10;
+        const bottomPx = Math.round(enemyOffset + 4);
+
+        if (this._lastEnemyX !== xPct || this._lastEnemyBottom !== bottomPx || this._lastEnemyFront !== isBossFront) {
+          this._lastEnemyX = xPct;
+          this._lastEnemyBottom = bottomPx;
+          this._lastEnemyFront = isBossFront;
+          enemyBubble.style.left = `${xPct}%`;
+          enemyBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
+          enemyBubble.style.top = '';
+        }
       }
     } else {
       this._lastEnemyX = null;
+      this._lastEnemyLeft = null;
       this._lastEnemyBottom = null;
       this._lastEnemyFront = null;
     }
