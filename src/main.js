@@ -174,6 +174,7 @@ class GameApp {
     await new Promise(resolve => setTimeout(resolve, 250));
     this.state = 'MENU';
     this.updateHUD();
+    this.soundEngine.startMenuBgm();
     this.menuSystem.showMainMenu();
   }
 
@@ -182,6 +183,18 @@ class GameApp {
       this.soundEngine.playClick();
       this.pauseGame();
     };
+
+    // Guarantee main menu BGM plays on user interaction if held back by browser autoplay policy
+    const ensureMenuBgmOnGesture = () => {
+      if (this.state === 'MENU') {
+        if (!this.soundEngine.currentBgmKey || this.soundEngine._bgmPaused) {
+          this.soundEngine.startMenuBgm();
+        }
+      }
+    };
+    window.addEventListener('pointerdown', ensureMenuBgmOnGesture);
+    window.addEventListener('keydown', ensureMenuBgmOnGesture);
+
     window.addEventListener('keydown', event => {
       if (event.key === 'Escape' && ACTIVE_STATES.has(this.state)) this.pauseGame();
     });
@@ -194,6 +207,8 @@ class GameApp {
         this.soundEngine.resume();
         if (this.state === 'PAUSED') {
           // Stay paused, but resume context for interaction
+        } else if (this.state === 'MENU') {
+          this.soundEngine.startMenuBgm();
         } else if (this.soundEngine.currentBgmKey && !this.soundEngine._bgmPaused) {
           this.soundEngine.resumeCurrentBgm();
         }
@@ -646,12 +661,24 @@ class GameApp {
     const heroBubble = document.querySelector('.hero-speech');
     if (heroBubble) {
       const xPct = Math.round((this.heroX / this.renderer.width) * 1000) / 10;
-      const bottomPx = Math.round(this.renderer.sprites.heroTopOffset(this.hero) - 25);
-      if (this._lastHeroX !== xPct || this._lastHeroBottom !== bottomPx) {
-        this._lastHeroX = xPct;
-        this._lastHeroBottom = bottomPx;
-        heroBubble.style.left = `${xPct}%`;
-        heroBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
+      const heroOffset = this.renderer.sprites.heroTopOffset(this.hero);
+      const bottomPx = Math.round(heroOffset - 25);
+
+      // Hero speech bubble edge check:
+      // Hide hero speech bubble when hero is near either edge of screen (< 13% or < 130px)
+      // to prevent text squishing and vertical stretching.
+      const isNearEdge = xPct < 13 || xPct > 87 || this.heroX < 130 || this.heroX > (this.renderer.width - 130);
+
+      if (isNearEdge) {
+        heroBubble.style.display = 'none';
+      } else {
+        heroBubble.style.display = '';
+        if (this._lastHeroX !== xPct || this._lastHeroBottom !== bottomPx) {
+          this._lastHeroX = xPct;
+          this._lastHeroBottom = bottomPx;
+          heroBubble.style.left = `${xPct}%`;
+          heroBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
+        }
       }
     } else {
       this._lastHeroX = null;
@@ -661,16 +688,24 @@ class GameApp {
     const enemyBubble = document.querySelector('.boss-speech');
     if (enemyBubble && this.currentEnemy) {
       const isMobileOrAndroid = isAndroidApp() || (typeof window !== 'undefined' && window.innerWidth <= 900);
-      enemyBubble.classList.toggle('boss-speech-front', isMobileOrAndroid);
+      // ONLY BOSSES on mobile/android get placed to the left of the boss!
+      const isBossFront = this.isBoss && isMobileOrAndroid;
+
+      enemyBubble.classList.toggle('boss-speech-front', isBossFront);
 
       const xPct = Math.round((this.enemyX / this.renderer.width) * 1000) / 10;
       const enemyOffset = this.enemyTopOffset();
-      const bottomPx = isMobileOrAndroid ? Math.round(enemyOffset * 0.45) : Math.round(enemyOffset - 25);
 
-      if (this._lastEnemyX !== xPct || this._lastEnemyBottom !== bottomPx || this._lastEnemyMobile !== isMobileOrAndroid) {
+      // Regular enemies: speech bubble is placed ABOVE creature sprite (+20px above top offset so ZERO overlap).
+      // Bosses on mobile/android: placed in front (to the left) of the boss.
+      const bottomPx = isBossFront
+        ? Math.round(enemyOffset * 0.45)
+        : Math.round(enemyOffset + 20);
+
+      if (this._lastEnemyX !== xPct || this._lastEnemyBottom !== bottomPx || this._lastEnemyFront !== isBossFront) {
         this._lastEnemyX = xPct;
         this._lastEnemyBottom = bottomPx;
-        this._lastEnemyMobile = isMobileOrAndroid;
+        this._lastEnemyFront = isBossFront;
         enemyBubble.style.left = `${xPct}%`;
         enemyBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
         enemyBubble.style.top = '';
@@ -678,7 +713,7 @@ class GameApp {
     } else {
       this._lastEnemyX = null;
       this._lastEnemyBottom = null;
-      this._lastEnemyMobile = null;
+      this._lastEnemyFront = null;
     }
   }
 
