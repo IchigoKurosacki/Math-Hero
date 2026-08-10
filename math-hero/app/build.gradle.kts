@@ -1,4 +1,6 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
   alias(libs.plugins.android.application)
@@ -25,11 +27,29 @@ android {
 
   signingConfigs {
     create("release") {
-      val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
-      storeFile = file(keystorePath)
-      storePassword = System.getenv("STORE_PASSWORD")
-      keyAlias = "upload"
-      keyPassword = System.getenv("KEY_PASSWORD")
+      val keystorePropsFile = file("${rootDir}/key.properties")
+      val keystoreProps = Properties()
+      if (keystorePropsFile.exists()) {
+        keystoreProps.load(FileInputStream(keystorePropsFile))
+      }
+
+      val keyPath = keystoreProps.getProperty("storeFile") ?: System.getenv("KEYSTORE_PATH") ?: "upload-keystore.jks"
+      val keystoreFile = if (file(keyPath).isAbsolute) file(keyPath) else if (file("${rootDir}/$keyPath").exists()) file("${rootDir}/$keyPath") else file("${projectDir}/$keyPath")
+      val storePass = keystoreProps.getProperty("storePassword") ?: System.getenv("STORE_PASSWORD") ?: "MathHeroRelease2026Pass"
+      val alias = keystoreProps.getProperty("keyAlias") ?: System.getenv("KEY_ALIAS") ?: "mathhero_upload"
+      val keyPass = keystoreProps.getProperty("keyPassword") ?: System.getenv("KEY_PASSWORD") ?: storePass
+
+      if (keystoreFile.exists()) {
+        storeFile = keystoreFile
+        storePassword = storePass
+        keyAlias = alias
+        keyPassword = keyPass
+      } else {
+        storeFile = file("${rootDir}/debug.keystore")
+        storePassword = "android"
+        keyAlias = "androiddebugkey"
+        keyPassword = "android"
+      }
     }
     create("debugConfig") {
       storeFile = file("${rootDir}/debug.keystore")
@@ -45,7 +65,7 @@ android {
       isMinifyEnabled = true
       isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      signingConfig = signingConfigs.getByName("debugConfig")
+      signingConfig = signingConfigs.getByName("release")
     }
     debug { 
       isCrunchPngs = false

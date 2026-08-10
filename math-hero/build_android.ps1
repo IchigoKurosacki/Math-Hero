@@ -77,12 +77,14 @@ if (-not (Test-Path $KeystoreFile)) {
 }
 
 # Build the project
-Write-Host "Building the optimized Release APK..."
+Write-Host "Building the Release Signed APK and AAB Bundle..."
 Set-Location $ScriptDir
-& $GradleBat assembleRelease
+& $GradleBat assembleRelease bundleRelease
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "Build successful! APK is located at: app\build\outputs\apk\release\app-release.apk" -ForegroundColor Green
+    Write-Host "Build successful!" -ForegroundColor Green
+    Write-Host "Signed Release APK: app\build\outputs\apk\release\app-release.apk" -ForegroundColor Green
+    Write-Host "Signed Release AAB (Google Play Bundle): app\build\outputs\bundle\release\app-release.aab" -ForegroundColor Green
 } else {
     Write-Host "Build failed." -ForegroundColor Red
 }

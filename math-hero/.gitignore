@@ -16,6 +16,10 @@
 local.properties
 .env
 debug.keystore
+upload-keystore.jks
+*.jks
+*.keystore
+key.properties
 
 # Local build dependencies
 /.android_sdk/
