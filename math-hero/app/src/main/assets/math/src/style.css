@@ -885,7 +885,8 @@ button:disabled { opacity: .42; cursor: not-allowed; filter: grayscale(.72) brig
 
 /* ───────────────────────── Pickers, wardrobe, stats ───────────────────────── */
 .table-picker-screen, .tier-screen, .mixed-screen, .settings-screen, .wardrobe-screen, .mastery-screen, .achievement-screen { width: min(900px,96vw); }
-.mastery-screen { padding: 24px 28px !important; box-sizing: border-box; }
+.mastery-screen { padding: 20px 24px; box-sizing: border-box; }
+.mastery-screen::before { display: none !important; }
 .mastery-screen .screen-body { padding: 4px 6px; display: flex; flex-direction: column; gap: 12px; }
 .table-picker-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
 .table-pick-btn { min-height: 70px; border-color: #47719e; background: linear-gradient(#285784,#153653); font-family: var(--font-display); font-size: 17px !important; }
