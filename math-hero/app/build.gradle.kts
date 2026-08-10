@@ -167,6 +167,7 @@ dependencies {
 }
 
 tasks.register<Copy>("copyWebAssets") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     // The F:\math directory is one level above the rootProject.projectDir (which is f:\math\math-hero)
     val srcDir = file(rootProject.projectDir.parentFile)
     val destDir = file("src/main/assets/math")
@@ -187,6 +188,10 @@ tasks.register<Copy>("copyWebAssets") {
     
     from(file("${rootProject.projectDir}/downscaled_assets")) {
         into("assets")
+    }
+
+    from(file("${srcDir}/public/assets/ui/icons")) {
+        into("assets/ui/icons")
     }
     
     into(destDir)
