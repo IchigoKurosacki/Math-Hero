@@ -231,6 +231,7 @@ export const ASSET_MANIFEST = {
 
   // Menu iconography
   'icon.achievements': './assets/ui/icons/icon_achievements.png',
+  'icon.back': './assets/ui/icons/icon_back.png',
   'icon.coins': './assets/ui/icons/icon_coins.png',
   'icon.hero': './assets/ui/icons/icon_hero.png',
   'icon.infinite': './assets/ui/icons/icon_infinite.png',

@@ -728,7 +728,29 @@ button:disabled { opacity: .42; cursor: not-allowed; filter: grayscale(.72) brig
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.55));
 }
 .icon-hero { background-image: url('../assets/ui/icons/icon_hero.png') !important; }
+.icon-back { background-image: url('../assets/ui/icons/icon_back.png') !important; }
 .icon-coins { background-image: url('../assets/ui/icons/icon_coins.png') !important; }
+
+/* Top right corner icon-only back button */
+.btn-back-corner {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  z-index: 25 !important;
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 12px !important;
+  margin: 0 !important;
+}
+.btn-back-corner .icon-img {
+  width: 32px !important;
+  height: 32px !important;
+}
 .icon-streak { background-image: url('../assets/ui/icons/icon_streak.png') !important; }
 .icon-single { background-image: url('../assets/ui/icons/icon_single.png') !important; }
 .icon-mixed { background-image: url('../assets/ui/icons/icon_mixed.png') !important; }

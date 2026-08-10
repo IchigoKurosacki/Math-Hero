@@ -214,12 +214,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel campaign-screen">
+        <button id="btnBackMenu" class="btn btn-back-corner" aria-label="${t('menu.backToMenu')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading">
           <div class="screen-header-left">
             <span class="heading-kicker">${t('campaign.kicker')}</span>
             <h2 class="modal-title">${t('campaign.title')}</h2>
           </div>
-          <button id="btnBackMenu" class="btn btn-back btn-header-back">${t('menu.backToMenu')}</button>
         </div>
         <div class="map-grid region-grid">${nodesHtml}</div>
       </div>
@@ -293,6 +293,7 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel bestiary-screen">
+        <button id="btnBackMenu" class="btn btn-back-corner" aria-label="${t('menu.backToMenu')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="bestiary-header-bar">
           <div class="bestiary-title-group">
             <span class="heading-kicker">${t('bestiary.kicker')}</span>
@@ -303,7 +304,6 @@ export class MenuSystem {
             ${this._renderStat(defeated, t('bestiary.defeated'), 'red')}
             ${this._renderStat(`${percent}%`, t('bestiary.completion'), percent >= 100 ? 'green' : 'blue')}
           </div>
-          <button id="btnBackMenu" class="btn btn-back btn-header-back">${t('menu.backToMenu')}</button>
         </div>
         <div class="bestiary-progress"><span style="width:${percent}%"></span></div>
 
@@ -341,12 +341,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel stage-screen" style="--region-primary:${region.bgColor1};--region-secondary:${region.bgColor2};">
+        <button id="btnBackCampaign" class="btn btn-back-corner" aria-label="${t('campaign.backToMap')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading stage-heading">
           <div class="screen-header-left">
             <span class="heading-kicker">${t('stage.region', { id: region.id })}</span>
             <h2 class="modal-title">${regionName(region)}</h2>
           </div>
-          <button id="btnBackCampaign" class="btn btn-back btn-header-back">${t('campaign.backToMap')}</button>
         </div>
         <div class="region-table-runes" style="margin-bottom: 8px;">${region.tables.slice(0,10).map(table => `<span>×${table}</span>`).join('')}</div>
         <div class="stage-path">${stagesHtml}</div>
@@ -401,12 +401,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel table-picker-screen">
+        <button id="btnBackMenu" class="btn btn-back-corner" aria-label="${t('menu.back')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading">
           <div class="screen-header-left">
             <span class="heading-kicker">${t('tables.pickKicker')}</span>
             <h2 class="modal-title">${t('tables.pickTitle')}</h2>
           </div>
-          <button id="btnBackMenu" class="btn btn-back btn-header-back">${t('menu.back')}</button>
         </div>
 
         <div class="screen-body">
@@ -441,11 +441,11 @@ export class MenuSystem {
     }).join('');
     this.container.style.display = 'flex';
     this.container.innerHTML = `<div class="modal-content game-panel tier-screen">
+      <button id="btnBackTables" class="btn btn-back-corner" aria-label="${t('tables.otherTable')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
       <div class="screen-heading">
         <div class="screen-header-left">
           <h2 class="modal-title">${t('tables.tableOf', { table })}</h2>
         </div>
-        <button id="btnBackTables" class="btn btn-back btn-header-back">${t('tables.otherTable')}</button>
       </div>
       <div class="tier-grid">${cards}</div>
     </div>`;
@@ -476,12 +476,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel mixed-screen">
+        <button id="btnBackMenu" class="btn btn-back-corner" aria-label="${t('menu.back')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading">
           <div class="screen-header-left">
             <h2 class="modal-title">${t('menu.mixed')}</h2>
             <span class="heading-kicker" id="mixedCount">${t('tables.selectedCount', { count: selected.size })}</span>
           </div>
-          <button id="btnBackMenu" class="btn btn-back btn-header-back">${t('menu.back')}</button>
         </div>
 
         <div class="screen-body">
@@ -773,12 +773,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel wardrobe-screen">
+        <button id="btnSaveWardrobe" class="btn btn-back-corner" aria-label="${t('wardrobe.done')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading">
           <div class="screen-header-left">
             <span class="heading-kicker">${archName} · 🪙 ${coins}</span>
             <h2 class="modal-title">${t('wardrobe.title')}</h2>
           </div>
-          <button id="btnSaveWardrobe" class="btn btn-gold btn-header-back">${t('wardrobe.done')}</button>
         </div>
 
         <div class="screen-body">
@@ -866,12 +866,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel mastery-screen">
+        <button id="btnBackMenu" class="btn btn-back-corner" aria-label="${t('menu.back')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading">
           <div class="screen-header-left">
             <span class="heading-kicker">${t('mastery.kicker', { mastered })}</span>
             <h2 class="modal-title">${t('mastery.title')}</h2>
           </div>
-          <button id="btnBackMenu" class="btn btn-back btn-header-back">${t('menu.back')}</button>
         </div>
 
         <div class="screen-body">
@@ -922,12 +922,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel achievement-screen">
+        <button id="btnBackMenu" class="btn btn-back-corner" aria-label="${t('menu.back')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading">
           <div class="screen-header-left">
             <span class="heading-kicker">${t('achievements.kicker', { earned, total: ACHIEVEMENTS.length })}</span>
             <h2 class="modal-title">${t('achievements.title')}</h2>
           </div>
-          <button id="btnBackMenu" class="btn btn-back btn-header-back">${t('menu.back')}</button>
         </div>
         <div class="achievement-list">${listHtml}</div>
       </div>
@@ -988,12 +988,12 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel settings-screen">
+        <button id="btnBackMenu" class="btn btn-back-corner" aria-label="${t('settings.saveAndBack')}"><span class="icon-img icon-back" aria-hidden="true"></span></button>
         <div class="screen-heading">
           <div class="screen-header-left">
             <span class="heading-kicker">${t('settings.kicker')}</span>
             <h2 class="modal-title">${t('settings.title')}</h2>
           </div>
-          <button id="btnBackMenu" class="btn btn-gold btn-header-back">${t('settings.saveAndBack')}</button>
         </div>
 
         <div class="screen-body">
