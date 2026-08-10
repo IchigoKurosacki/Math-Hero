@@ -291,16 +291,16 @@ export class MenuSystem {
     this.container.style.display = 'flex';
     this.container.innerHTML = `
       <div class="modal-content game-panel bestiary-screen">
-        <div class="screen-heading">
-          <span class="heading-kicker">${t('bestiary.kicker')}</span>
-          <h2 class="modal-title">${t('menu.bestiary')}</h2>
-          <p class="menu-description">${t('bestiary.lead')}</p>
-        </div>
-
-        <div class="stat-grid bestiary-summary">
-          ${this._renderStat(`${met}/${total}`, t('bestiary.discovered'), 'gold')}
-          ${this._renderStat(defeated, t('bestiary.defeated'), 'red')}
-          ${this._renderStat(`${percent}%`, t('bestiary.completion'), percent >= 100 ? 'green' : 'blue')}
+        <div class="bestiary-header-bar">
+          <div class="bestiary-title-group">
+            <span class="heading-kicker">${t('bestiary.kicker')}</span>
+            <h2 class="modal-title">${t('menu.bestiary')}</h2>
+          </div>
+          <div class="stat-grid bestiary-summary">
+            ${this._renderStat(`${met}/${total}`, t('bestiary.discovered'), 'gold')}
+            ${this._renderStat(defeated, t('bestiary.defeated'), 'red')}
+            ${this._renderStat(`${percent}%`, t('bestiary.completion'), percent >= 100 ? 'green' : 'blue')}
+          </div>
         </div>
         <div class="bestiary-progress"><span style="width:${percent}%"></span></div>
 

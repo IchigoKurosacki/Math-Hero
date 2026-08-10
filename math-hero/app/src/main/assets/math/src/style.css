@@ -1361,18 +1361,31 @@ input[type="range"] { height: 8px; border-radius: 20px; background: #0b182b; cur
 /* A browsing screen: chrome stays tight so the grid keeps the vertical room. */
 .bestiary-screen {
   width: min(1180px,97vw); overflow: hidden;
-  gap: 14px; padding: clamp(18px,2.4vw,26px);
+  gap: 8px; padding: clamp(10px,1.6vw,16px);
 }
-.bestiary-screen .menu-description { margin: 0; }
-.bestiary-summary { flex: 0 0 auto; gap: 10px; }
-.bestiary-summary .stat-tile { padding: 9px 12px 8px; gap: 2px; }
-.bestiary-summary .stat-value { font-size: clamp(19px,2.3vw,24px); }
+.bestiary-header-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.bestiary-title-group {
+  display: flex; flex-direction: column; gap: 1px;
+}
+.bestiary-title-group .modal-title {
+  margin: 0; font-size: clamp(18px,2.2vw,24px); line-height: 1.1;
+}
+.bestiary-title-group .heading-kicker {
+  font-size: 10px;
+}
+.bestiary-summary { flex: 0 0 auto; gap: 6px; margin: 0; }
+.bestiary-summary .stat-tile { padding: 4px 9px 3px; gap: 1px; min-width: 80px; }
+.bestiary-summary .stat-value { font-size: clamp(14px,1.8vw,18px); }
+.bestiary-summary .stat-label { font-size: 8px; }
 /* Thin readout of how much of the journal is filled in. */
 .bestiary-progress {
   position: relative; overflow: hidden; flex: 0 0 auto;
-  height: 8px; border: 1px solid #34507a; border-radius: 999px;
+  height: 5px; border: 1px solid #34507a; border-radius: 999px;
   background: linear-gradient(180deg,rgba(3,9,20,.9),rgba(9,19,36,.9));
   box-shadow: inset 0 2px 5px rgba(0,0,0,.6);
+  margin-top: -2px;
 }
 .bestiary-progress span {
   display: block; height: 100%; border-radius: 999px;
@@ -1380,11 +1393,24 @@ input[type="range"] { height: 8px; border-radius: 20px; background: #0b182b; cur
   box-shadow: 0 0 12px rgba(255,190,50,.5);
   transition: width .45s cubic-bezier(.2,.8,.3,1);
 }
+.bestiary-screen .screen-footer-actions {
+  display: flex; justify-content: center; padding-top: 2px; flex: 0 0 auto;
+}
+.bestiary-screen .btn-back,
+.bestiary-screen #btnBackMenu {
+  min-height: 32px !important;
+  padding: 4px 16px !important;
+  font-size: 11px !important;
+  width: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 /* Same reason as the achievement list: the panel's inner frame must stay put. */
 .bestiary-scroll {
-  flex: 1; min-height: 0; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 22px;
-  padding: 2px 12px 4px 2px;
+  flex: 1; min-height: 0; max-height: 75vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 2px 10px 4px 2px;
   scrollbar-width: thin; scrollbar-color: var(--gold-500) rgba(5,12,26,.45);
 }
 .beast-group { display: flex; flex-direction: column; gap: 11px; }
