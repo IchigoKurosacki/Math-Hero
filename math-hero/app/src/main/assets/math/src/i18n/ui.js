@@ -267,8 +267,8 @@ export const UI = {
   'combat.ultimateReady': { uk: '⚡ УЛЬТА ГОТОВА!', en: '⚡ ULTIMATE READY!' },
   'combat.ultimateButton': { uk: 'Ульта', en: 'Ultimate' },
   'combat.ultimateHint': {
-    uk: '⚡ Ульта заряджена! Натисни «Ульта» або пробіл.',
-    en: '⚡ Ultimate charged! Press “Ultimate” or space.',
+    uk: '⚡ Ульта заряджена! Натисни «Ульта».',
+    en: '⚡ Ultimate charged! Tap “Ultimate”.',
   },
   'combat.ultimateStrike': { uk: 'Ультимативний удар!', en: 'Ultimate strike!' },
   'combat.ultimateCry': { uk: 'Сила знань — на повну!', en: 'The power of knowledge, unleashed!' },

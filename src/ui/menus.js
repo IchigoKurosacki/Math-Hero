@@ -15,6 +15,7 @@ import {
   creatureName, regionName, regionDescription, stageShortName,
   archetypeName, skinName, achievementTitle, achievementDesc,
 } from '../i18n/index.js';
+import { isAndroidApp } from '../utils/platform.js';
 
 /**
  * Sprite URL for any creature, or null when it has no artwork.
@@ -330,7 +331,7 @@ export class MenuSystem {
       return `
         <button class="map-node stage-node ${locked ? 'locked' : 'unlocked'} ${stage.isBossStage ? 'boss-stage' : ''}" data-stage-idx="${idx}" ${locked ? 'disabled' : ''}>
           <span class="stage-index">${stageIcons[idx]}</span>
-          <span class="stage-node-copy"><strong>${stageShortName(stage)}</strong><small>${t('stage.enemiesAndTier', { count: stage.targetEnemies, tier: stage.tier })}</small></span>
+          <span class="stage-node-copy"><strong>${stageShortName(stage)}</strong></span>
           <span class="stage-node-status">${locked ? '🔒' : prog.completed ? (stars || t('stage.completed')) : t('stage.toBattle')}</span>
         </button>
       `;
@@ -1010,10 +1011,12 @@ export class MenuSystem {
 
           <section class="setting-group">
             <h3 class="pick-heading">${t('settings.groupSave')}</h3>
-            <div class="action-row">
-              <button id="btnExportSave" class="btn">${t('settings.export')}</button>
-              <button id="btnImportSave" class="btn">${t('settings.import')}</button>
-            </div>
+            ${!isAndroidApp() ? `
+              <div class="action-row">
+                <button id="btnExportSave" class="btn">${t('settings.export')}</button>
+                <button id="btnImportSave" class="btn">${t('settings.import')}</button>
+              </div>
+            ` : ''}
             <button id="btnResetProgress" class="btn btn-danger">${t('settings.reset')}</button>
           </section>
 

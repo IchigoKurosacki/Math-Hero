@@ -223,6 +223,7 @@ tasks.register<Copy>("copyWebAssets") {
             var html = indexHtmlFile.readText()
             val errorScript = """
             <script>
+            window.isAndroid = true;
             window.onerror = function(msg, url, line, col, error) {
                 var d = document.createElement("div");
                 d.style.cssText = "position:absolute;z-index:99999;background:#8b0000;color:white;padding:20px;top:0;left:0;right:0;bottom:0;font-size:16px;overflow:auto;";

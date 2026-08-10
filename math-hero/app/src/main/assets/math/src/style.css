@@ -503,13 +503,21 @@ button:disabled { opacity: .42; cursor: not-allowed; filter: grayscale(.72) brig
   line-height: 1.3;
   text-shadow: 0 2px 4px rgba(0,0,0,.7);
   animation: panelEnter .25s cubic-bezier(.18,.88,.3,1.08);
-  transform: translate(-50%, -100%);
+  transform: translate3d(-50%, -100%, 0);
+  will-change: transform, left, bottom;
 }
 .speech-bubble::after { content: ""; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 10px solid var(--gold-500); }
 .hero-speech { border-color: #ffd459; background: linear-gradient(180deg, rgba(24,52,92,.97), rgba(9,23,46,.98)); color: #fff4bd; top: auto; bottom: calc(100% - var(--ground-y, 50vh) + calc(260px * var(--scene-scale, 1))); }
 .hero-speech::after { border-top-color: #ffd459; }
 .boss-speech { border-color: #c084fc; background: linear-gradient(180deg, rgba(58,25,84,.97), rgba(26,10,42,.98)); color: #f3e8ff; top: auto; bottom: calc(100% - var(--ground-y, 50vh) + calc(340px * var(--scene-scale, 1))); }
 .boss-speech::after { border-top-color: #c084fc; }
+.boss-speech.boss-speech-front { transform: translate3d(-105%, -40%, 0); }
+.boss-speech.boss-speech-front::after {
+  top: 50%; right: -10px; left: auto; bottom: auto;
+  transform: translateY(-50%);
+  border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+  border-left: 10px solid #c084fc; border-right: none;
+}
 .options-grid { width: 100%; display: grid; grid-template-columns: repeat(var(--option-count, 4), minmax(90px, 1fr)); gap: 12px; }
 .option-btn {
   position: relative; min-height: 66px; padding: 8px 14px; overflow: hidden; border: 2px solid #5a8fd0; border-radius: 12px;
@@ -868,7 +876,7 @@ button:disabled { opacity: .42; cursor: not-allowed; filter: grayscale(.72) brig
 .stage-node.unlocked:not(.completed) .stage-index { animation: nextStagePulse 2.1s ease-in-out infinite; }
 .stage-node.boss-stage { border-color: #c27321; background: var(--tex-fiber), linear-gradient(#54331c,#25170f); background-blend-mode: soft-light, normal; }
 .stage-node.boss-stage .stage-index { background: linear-gradient(#ffcf7a,#c2400f); border-color: #8c2f08; box-shadow: 0 0 0 4px #1c0a04, 0 6px 13px rgba(0,0,0,.4), 0 0 24px rgba(255,110,30,.5), inset 0 1px white; }
-.stage-index { display: grid; place-items: center; width: 70px; height: 70px; border-radius: 50%; color: #3d1c02; background: linear-gradient(#fff0a3,#e99a18); border: 4px solid #7f450a; box-shadow: 0 0 0 4px #071221,0 6px 13px rgba(0,0,0,.35),inset 0 1px white; font-family: var(--font-display); font-size: 20px; font-weight: 900; }
+.stage-index { display: grid; place-items: center; width: 70px; height: 70px; flex-shrink: 0; border-radius: 50%; color: #3d1c02; background: linear-gradient(#fff0a3,#e99a18); border: 4px solid #7f450a; box-shadow: 0 0 0 4px #071221,0 6px 13px rgba(0,0,0,.35),inset 0 1px white; font-family: var(--font-display); font-size: 20px; font-weight: 900; }
 .stage-node.locked .stage-index { color: #8392a5; background: linear-gradient(#465569,#263344); border-color: #182536; }
 .stage-node-copy { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
 .stage-node-copy strong { color: var(--gold-100); font-family: var(--font-display); font-size: 13px; }
@@ -877,6 +885,8 @@ button:disabled { opacity: .42; cursor: not-allowed; filter: grayscale(.72) brig
 
 /* ───────────────────────── Pickers, wardrobe, stats ───────────────────────── */
 .table-picker-screen, .tier-screen, .mixed-screen, .settings-screen, .wardrobe-screen, .mastery-screen, .achievement-screen { width: min(900px,96vw); }
+.mastery-screen { padding: 24px 28px !important; box-sizing: border-box; }
+.mastery-screen .screen-body { padding: 4px 6px; display: flex; flex-direction: column; gap: 12px; }
 .table-picker-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
 .table-pick-btn { min-height: 70px; border-color: #47719e; background: linear-gradient(#285784,#153653); font-family: var(--font-display); font-size: 17px !important; }
 .table-pick-btn::after { content: "×"; position: absolute; right: 8px; bottom: 3px; color: rgba(255,255,255,.1); font-size: 38px; }

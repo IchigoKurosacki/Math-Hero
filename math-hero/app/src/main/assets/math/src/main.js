@@ -19,6 +19,7 @@ import {
   t, setLanguage, detectLanguage, isKnownLanguage, applyStaticText,
   regionName, stageFullName, achievementTitle,
 } from './i18n/index.js';
+import { isAndroidApp } from './utils/platform.js';
 
 const ACTIVE_STATES = new Set(['WALKING', 'COMBAT']);
 
@@ -641,17 +642,43 @@ class GameApp {
 
   updateSpeechPositions() {
     if (!this.renderer?.width || !this.renderer?.height) return;
+
     const heroBubble = document.querySelector('.hero-speech');
     if (heroBubble) {
-      const xPct = (this.heroX / this.renderer.width) * 100;
-      heroBubble.style.left = `${xPct}%`;
-      heroBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${this.renderer.sprites.heroTopOffset(this.hero) - 25}px)`;
+      const xPct = Math.round((this.heroX / this.renderer.width) * 1000) / 10;
+      const bottomPx = Math.round(this.renderer.sprites.heroTopOffset(this.hero) - 25);
+      if (this._lastHeroX !== xPct || this._lastHeroBottom !== bottomPx) {
+        this._lastHeroX = xPct;
+        this._lastHeroBottom = bottomPx;
+        heroBubble.style.left = `${xPct}%`;
+        heroBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
+      }
+    } else {
+      this._lastHeroX = null;
+      this._lastHeroBottom = null;
     }
+
     const enemyBubble = document.querySelector('.boss-speech');
     if (enemyBubble && this.currentEnemy) {
-      enemyBubble.style.left = `${(this.enemyX / this.renderer.width) * 100}%`;
-      enemyBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${this.enemyTopOffset() - 25}px)`;
-      enemyBubble.style.top = '';
+      const isMobileOrAndroid = isAndroidApp() || (typeof window !== 'undefined' && window.innerWidth <= 900);
+      enemyBubble.classList.toggle('boss-speech-front', isMobileOrAndroid);
+
+      const xPct = Math.round((this.enemyX / this.renderer.width) * 1000) / 10;
+      const enemyOffset = this.enemyTopOffset();
+      const bottomPx = isMobileOrAndroid ? Math.round(enemyOffset * 0.45) : Math.round(enemyOffset - 25);
+
+      if (this._lastEnemyX !== xPct || this._lastEnemyBottom !== bottomPx || this._lastEnemyMobile !== isMobileOrAndroid) {
+        this._lastEnemyX = xPct;
+        this._lastEnemyBottom = bottomPx;
+        this._lastEnemyMobile = isMobileOrAndroid;
+        enemyBubble.style.left = `${xPct}%`;
+        enemyBubble.style.bottom = `calc(100% - var(--ground-y, 50vh) + ${bottomPx}px)`;
+        enemyBubble.style.top = '';
+      }
+    } else {
+      this._lastEnemyX = null;
+      this._lastEnemyBottom = null;
+      this._lastEnemyMobile = null;
     }
   }
 
