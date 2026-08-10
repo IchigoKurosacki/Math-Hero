@@ -77,12 +77,12 @@ if (-not (Test-Path $KeystoreFile)) {
 }
 
 # Build the project
-Write-Host "Building the APK..."
+Write-Host "Building the optimized Release APK..."
 Set-Location $ScriptDir
-& $GradleBat assembleDebug
+& $GradleBat assembleRelease
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "Build successful! APK is located at: app\build\outputs\apk\debug\app-debug.apk" -ForegroundColor Green
+    Write-Host "Build successful! APK is located at: app\build\outputs\apk\release\app-release.apk" -ForegroundColor Green
 } else {
     Write-Host "Build failed." -ForegroundColor Red
 }

@@ -1,7 +1,8 @@
 param (
     [string]$srcPath = "F:\math\public\assets",
     [string]$destPath = "F:\math\math-hero\downscaled_assets",
-    [int]$scaleFactor = 3
+    [int]$maxBgDimension = 960,
+    [int]$maxSpriteDimension = 400
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -14,7 +15,7 @@ $files = Get-ChildItem -Path $srcPath -Filter *.png -Recurse
 $total = $files.Count
 $count = 0
 
-Write-Host "Starting downscale of $total images..."
+Write-Host "Starting smart asset optimization for $total images (decor preserved at 100% quality)..."
 
 foreach ($file in $files) {
     $relativePath = $file.FullName.Substring($srcPath.Length + 1)
@@ -24,23 +25,43 @@ foreach ($file in $files) {
     if (!(Test-Path $destDir)) { 
         New-Item -ItemType Directory -Path $destDir -Force | Out-Null
     }
+
+    # Preserve midground decor at 100% original size and full quality
+    if ($file.Name -like "*decor*.png") {
+        Copy-Item -Path $file.FullName -Destination $destFile -Force
+        $count++
+        if ($count % 30 -eq 0) { Write-Host "Processed $count / $total ..." }
+        continue
+    }
     
     try {
         $img = [System.Drawing.Image]::FromFile($file.FullName)
         
-        $newW = [int][math]::Max(1, [math]::Round($img.Width / $scaleFactor))
-        $newH = [int][math]::Max(1, [math]::Round($img.Height / $scaleFactor))
+        $isBg = ($file.Name -like "bg_*.png") -or ($file.Name -eq "menu_bg.png")
+        $maxDim = if ($isBg) { $maxBgDimension } else { $maxSpriteDimension }
+        
+        $scale = 1.0
+        if ($img.Width -gt $maxDim -or $img.Height -gt $maxDim) {
+            $scaleW = $maxDim / $img.Width
+            $scaleH = $maxDim / $img.Height
+            $scale = [math]::Min($scaleW, $scaleH)
+        } else {
+            if ($img.Width -gt 256) {
+                $scale = 0.4
+            }
+        }
+        
+        $newW = [int][math]::Max(1, [math]::Round($img.Width * $scale))
+        $newH = [int][math]::Max(1, [math]::Round($img.Height * $scale))
         
         $newImg = New-Object System.Drawing.Bitmap($newW, $newH)
         $graphics = [System.Drawing.Graphics]::FromImage($newImg)
         
-        # High quality scaling
         $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
         $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
         $graphics.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
         $graphics.CompositingQuality = [System.Drawing.Drawing2D.CompositingQuality]::HighQuality
         
-        # Prevent edge ghosting
         $wrapMode = New-Object System.Drawing.Imaging.ImageAttributes
         $wrapMode.SetWrapMode([System.Drawing.Drawing2D.WrapMode]::TileFlipXY)
         $rect = New-Object System.Drawing.Rectangle(0, 0, $newW, $newH)
@@ -55,7 +76,7 @@ foreach ($file in $files) {
         $img.Dispose()
         
         $count++
-        if ($count % 20 -eq 0) {
+        if ($count % 30 -eq 0) {
             Write-Host "Processed $count / $total ..."
         }
     }
@@ -64,4 +85,4 @@ foreach ($file in $files) {
     }
 }
 
-Write-Host "Done! Processed $count images successfully."
+Write-Host "Done! Successfully processed $count images with full decor resolution preserved."

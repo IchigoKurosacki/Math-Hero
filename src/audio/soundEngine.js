@@ -190,6 +190,21 @@ export class SoundEngine {
     this._tickMs = 40;        // scheduler tick
     this._trackGain = null;   // per-track gain for crossfades
     this._noiseBuffer = null;
+
+    if (typeof window !== 'undefined') {
+      window.soundEngine = this;
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          this.pauseBgm();
+          this.suspend();
+        } else {
+          this.resume();
+          if (this.currentBgmKey && this._bgmPaused) {
+            this.resumeBgm();
+          }
+        }
+      });
+    }
   }
 
   // =========================================================================
@@ -201,7 +216,21 @@ export class SoundEngine {
       this.ctx = new AudioCtx();
       this._buildGraph();
     }
-    if (this.ctx.state === 'suspended') this.ctx.resume();
+    if (this.ctx.state === 'suspended' && !document.hidden) {
+      try { this.ctx.resume(); } catch (_e) {}
+    }
+  }
+
+  suspend() {
+    if (this.ctx && this.ctx.state === 'running') {
+      try { this.ctx.suspend(); } catch (_e) {}
+    }
+  }
+
+  resume() {
+    if (this.ctx && this.ctx.state === 'suspended' && !document.hidden) {
+      try { this.ctx.resume(); } catch (_e) {}
+    }
   }
 
   _buildGraph() {

@@ -195,7 +195,7 @@ export class GameRenderer {
     const rect = this.canvas.parentElement.getBoundingClientRect();
     this.width = Math.max(320, rect.width);
     this.height = Math.max(360, rect.height);
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const dpr = Math.min(1.25, window.devicePixelRatio || 1);
     this.canvas.width = Math.round(this.width * dpr);
     this.canvas.height = Math.round(this.height * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -470,6 +470,7 @@ export class GameRenderer {
     // ── Stars, fading in with the darkness ──
     if (dark > 0.08) {
       const starAlpha = Math.min(1, (dark - 0.08) / 0.5);
+      ctx.fillStyle = '#ffffff';
       for (let i = 0; i < 90; i++) {
         const sx = (i * 83 + 17) % this.width;
         const sy = (i * 47 + 9) % (this.height * 0.55);
@@ -477,13 +478,6 @@ export class GameRenderer {
         const twinkle = 0.5 + 0.5 * Math.sin(t * (1.2 + (i % 5) * 0.4) + i * 1.7);
         const r = baseR * (0.7 + twinkle * 0.5);
         ctx.globalAlpha = starAlpha * twinkle * 0.9;
-        const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, r * 4);
-        glow.addColorStop(0, 'rgba(255,255,255,0.8)');
-        glow.addColorStop(0.4, 'rgba(200,220,255,0.2)');
-        glow.addColorStop(1, 'rgba(200,220,255,0)');
-        ctx.fillStyle = glow;
-        ctx.fillRect(sx - r * 4, sy - r * 4, r * 8, r * 8);
-        ctx.fillStyle = '#fff';
         ctx.beginPath();
         ctx.arc(sx, sy, r, 0, Math.PI * 2);
         ctx.fill();

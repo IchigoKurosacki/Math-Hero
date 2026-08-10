@@ -2,6 +2,7 @@ package com.example
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -11,7 +12,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,30 +24,65 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 class MainActivity : ComponentActivity() {
+    private var webViewRef: WebView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         
-        // Hide status bar and navigation bar (Immersive Mode)
+        applyImmersiveMode()
+        
+        setContent {
+            MyApplicationTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
+                    GameWebView(
+                        modifier = Modifier.fillMaxSize(),
+                        onWebViewCreated = { webView -> webViewRef = webView }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun applyImmersiveMode() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
-        
-        setContent {
-            MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
-                    GameWebView(modifier = Modifier.fillMaxSize())
-                }
-            }
-        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        webViewRef?.onPause()
+        webViewRef?.pauseTimers()
+        webViewRef?.evaluateJavascript(
+            "(function() { if (window.soundEngine) { window.soundEngine.suspend(); } document.dispatchEvent(new Event('visibilitychange')); })();",
+            null
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webViewRef?.onResume()
+        webViewRef?.resumeTimers()
+        applyImmersiveMode()
+        webViewRef?.evaluateJavascript(
+            "(function() { if (window.soundEngine && !document.hidden) { window.soundEngine.resume(); } })();",
+            null
+        )
+    }
+
+    override fun onDestroy() {
+        webViewRef?.destroy()
+        webViewRef = null
+        super.onDestroy()
     }
 }
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun GameWebView(modifier: Modifier = Modifier) {
+fun GameWebView(modifier: Modifier = Modifier, onWebViewCreated: (WebView) -> Unit = {}) {
     AndroidView(
         modifier = modifier.fillMaxSize(),
         factory = { context ->
@@ -55,8 +90,10 @@ fun GameWebView(modifier: Modifier = Modifier) {
                 .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(context))
                 .build()
 
-            WebView.setWebContentsDebuggingEnabled(true)
+            WebView.setWebContentsDebuggingEnabled(false)
             WebView(context).apply {
+                onWebViewCreated(this)
+                setLayerType(View.LAYER_TYPE_HARDWARE, null)
                 layoutParams = android.view.ViewGroup.LayoutParams(
                     android.view.ViewGroup.LayoutParams.MATCH_PARENT,
                     android.view.ViewGroup.LayoutParams.MATCH_PARENT

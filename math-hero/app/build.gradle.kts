@@ -42,12 +42,16 @@ android {
   buildTypes {
     release {
       isCrunchPngs = false
-      isMinifyEnabled = false
+      isMinifyEnabled = true
+      isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      signingConfig = signingConfigs.getByName("release")
+      signingConfig = signingConfigs.getByName("debugConfig")
     }
     debug { 
       isCrunchPngs = false
+      isMinifyEnabled = true
+      isShrinkResources = true
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("debugConfig") 
     }
   }
@@ -146,6 +150,10 @@ tasks.register<Copy>("copyWebAssets") {
     // The F:\math directory is one level above the rootProject.projectDir (which is f:\math\math-hero)
     val srcDir = file(rootProject.projectDir.parentFile)
     val destDir = file("src/main/assets/math")
+    
+    doFirst {
+        destDir.deleteRecursively()
+    }
     
     from(srcDir) {
         include("index.html")

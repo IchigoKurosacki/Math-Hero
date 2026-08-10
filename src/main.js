@@ -185,7 +185,18 @@ class GameApp {
       if (event.key === 'Escape' && ACTIVE_STATES.has(this.state)) this.pauseGame();
     });
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && ACTIVE_STATES.has(this.state)) this.pauseGame();
+      if (document.hidden) {
+        if (ACTIVE_STATES.has(this.state)) this.pauseGame();
+        this.soundEngine.pauseBgm();
+        this.soundEngine.suspend();
+      } else {
+        this.soundEngine.resume();
+        if (this.state === 'PAUSED') {
+          // Stay paused, but resume context for interaction
+        } else if (this.soundEngine.currentBgmKey && !this.soundEngine._bgmPaused) {
+          this.soundEngine.resumeCurrentBgm();
+        }
+      }
     });
   }
 
@@ -453,12 +464,28 @@ class GameApp {
   }
 
   gameLoop(now) {
-    const dt = Math.min(0.05, (now - this.lastFrameTime) / 1000);
+    if (document.hidden) {
+      requestAnimationFrame(time => this.gameLoop(time));
+      return;
+    }
+    // Cap rendering loop at ~60 FPS max (15ms min delta) to prevent 90Hz/120Hz heating
+    if (this.lastFrameTime && (now - this.lastFrameTime < 15)) {
+      requestAnimationFrame(time => this.gameLoop(time));
+      return;
+    }
+
+    const dt = Math.min(0.05, (now - (this.lastFrameTime || now)) / 1000);
     this.lastFrameTime = now;
+
+    if (this.state === 'PAUSED') {
+      requestAnimationFrame(time => this.gameLoop(time));
+      return;
+    }
+
     // A hit-stop freeze-frame halts simulation but still lets the renderer
     // tick its shake, flash and freeze timers.
     const frozen = this.renderer.timeScale === 0;
-    if (this.state !== 'PAUSED' && this.state !== 'LOADING' && !frozen) {
+    if (this.state !== 'LOADING' && !frozen) {
       const speed = this.saveSystem.data.settings.animationSpeed || 1;
       this.animTime += dt * speed;
       this.updateDeathAnimation(dt);
@@ -535,7 +562,7 @@ class GameApp {
       this.updateSpeechPositions();
       this.mathUI.updateEnemyHp(this.currentEnemy, this.bossController?.phase || 1);
     }
-    if (this.state !== 'PAUSED' && this.state !== 'LOADING') this.renderer.update(dt);
+    if (this.state !== 'LOADING') this.renderer.update(dt);
 
     this.renderer.render({
       hero: this.hero,
